@@ -1,13 +1,20 @@
-name: Enviar recordatorio diario
+name: Enviar recordatorio de clases
 
 on:
   schedule:
-    - cron: '0 23 * * *'  # Todos los días a las 6:00pm Colombia (23:00 UTC)
-  workflow_dispatch:  # También se puede ejecutar manualmente
+    - cron: '0 22 * * *'  # Ejecuta todos los días a las 10:00 p.m. UTC
+  workflow_dispatch:      # Permite ejecución manual
 
 jobs:
-  run-rembot:
+  enviar-recordatorio:
     runs-on: ubuntu-latest
+
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      EMAIL_USER: ${{ secrets.EMAIL_USER }}
+      EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+      EMAIL_TO: ${{ secrets.EMAIL_TO }}
+
     steps:
       - name: Clonar repositorio
         uses: actions/checkout@v3
@@ -18,11 +25,8 @@ jobs:
           python-version: '3.11'
 
       - name: Instalar dependencias
-        run: pip install -r requirements.txt
+        run: pip install requests
 
-      - name: Establecer variables de entorno
-        run: |
-          echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> $GITHUB_ENV
-
-      - name: Ejecutar bot
+      - name: Ejecutar recordatorio
         run: python main.py
+
