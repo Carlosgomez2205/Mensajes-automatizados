@@ -1,20 +1,22 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-import time
-import requests
 import os
+import requests
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from datetime import datetime, timedelta
-from dotenv import load_dotenv
 
-# Función para evitar emojis fuera del rango BMP (que generan error en ChromeDriver)
-def filtrar_texto_bmp(texto):
-    return ''.join(c for c in texto if ord(c) <= 0xFFFF)
+# 1. Cargar variables de entorno
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+EMAIL_USER     = os.environ.get("EMAIL_USER")
+EMAIL_PASS     = os.environ.get("EMAIL_PASS")
+EMAIL_TO       = os.environ.get("EMAIL_TO")
 
-# 1. Cargar clave desde .env
-load_dotenv(dotenv_path="keys.env")
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+# Validar claves
+if not all([GEMINI_API_KEY, EMAIL_USER, EMAIL_PASS, EMAIL_TO]):
+    print("❌ Error: Una o más variables de entorno no están definidas.")
+    exit(1)
 
-# 2. Configurar grupos y horarios
+# 2. Configuración de grupos
 grupos = {
     "Análisis de datos G4": {
         "horario": {"Mon": "18:00–22:00", "Wed": "18:00–22:00", "Fri": "18:00–22:00"},
@@ -34,12 +36,12 @@ grupos = {
     }
 }
 
-# 3. Calcular mañana
+# 3. Calcular el día siguiente
 mañana = datetime.now() + timedelta(days=1)
 dia_abbr = mañana.strftime("%a")
-fecha_texto = mañana.strftime("%A, %d de %B")
+fecha_texto = mañana.strftime("%A, %d de %B").capitalize()
 
-# 4. Generar mensajes
+# 4. Generar mensajes para los grupos que tienen clase
 mensajes = []
 for grupo, info in grupos.items():
     if dia_abbr in info["horario"]:
@@ -47,65 +49,46 @@ for grupo, info in grupos.items():
         lugar = info["lugar"]
 
         prompt = (
-            f"Eres un asistente educativo. Escribe un mensaje corto, claro y motivador para recordar a los campistas del grupo "
-            f"{grupo} que mañana {fecha_texto} tienen clase de {hora}. "
-            f"El lugar es {lugar}. "
-            f"No uses la palabra 'Camper', di 'campistas'. El mensaje será enviado por WhatsApp."
+            "Eres un asistente educativo que redacta recordatorios de clases para jóvenes en un bootcamp. "
+            "Redacta el siguiente mensaje completamente en español, con tono positivo, breve y usando emojis relacionados al aprendizaje. "
+            f"Grupo: {grupo}, Fecha: {fecha_texto}, Hora: {hora}, Lugar: {lugar}. "
+            "Nunca mezcles inglés ni digas 'camper', usa 'campistas'. Este mensaje se enviará por correo."
         )
 
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
-        headers = {"Content-Type": "application/json"}
-        payload = {"contents": [{"parts": [{"text": prompt}]}]}
-
         try:
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
+            headers = {"Content-Type": "application/json"}
+            payload = {"contents": [{"parts": [{"text": prompt}]}]}
+
             r = requests.post(url, headers=headers, json=payload)
             r.raise_for_status()
-            mensaje = r.json()["candidates"][0]["content"]["parts"][0]["text"]
-            mensajes.append(mensaje.strip())
-        except Exception as e:
-            print(f"❌ Error al generar mensaje para {grupo}:", e)
 
-# 5. Unir mensajes y filtrar caracteres fuera del rango BMP
+            texto = r.json()["candidates"][0]["content"]["parts"][0]["text"]
+            mensajes.append(texto.strip())
+        except Exception as e:
+            print(f"❌ Error al generar mensaje para {grupo}: {e}")
+
+# 5. Verificar y unir mensajes
 if not mensajes:
     print("✅ Ningún grupo tiene clase mañana.")
-    exit()
+    exit(0)
 
-mensaje_final = filtrar_texto_bmp("\n\n".join(mensajes))
-print("📩 Mensaje generado:\n", mensaje_final)
+mensaje_html = "<br><br>".join(mensajes)
+print("📩 Mensaje generado:\n", mensaje_html)
 
-# 6. Lanzar navegador con sesión guardada
-options = webdriver.ChromeOptions()
-options.add_argument(r"user-data-dir=C:\Users\carlo\AppData\Local\Google\Chrome\User Data\RemBot")
-driver = webdriver.Chrome(options=options)
+# 6. Enviar correo
+email = MIMEMultipart("alternative")
+email["From"] = EMAIL_USER
+email["To"] = EMAIL_TO
+email["Subject"] = f"📌 Recordatorios de clase para {fecha_texto}"
 
-# 7. Cargar WhatsApp y esperar automáticamente
-driver.get("https://web.whatsapp.com")
-print("⏳ Esperando que WhatsApp Web cargue...")
-time.sleep(10)
+contenido_html = f"<html><body style='font-family:sans-serif;'>{mensaje_html}</body></html>"
+email.attach(MIMEText(contenido_html, "html", "utf-8"))
 
-# 8. Buscar grupo y enviar mensaje
-NOMBRE_DESTINO = "Mensajes grupos TTech"
 try:
-    search = driver.find_element(By.XPATH, '//div[@contenteditable="true"][@data-tab="3"]')
-    search.click()
-    search.send_keys(NOMBRE_DESTINO)
-    time.sleep(2)
-
-    driver.find_element(By.XPATH, f'//span[@title="{NOMBRE_DESTINO}"]').click()
-    time.sleep(2)
-
-    chatbox = driver.find_element(By.XPATH, '//div[@contenteditable="true"][@data-tab="10"]')
-    chatbox.send_keys(mensaje_final)
-    time.sleep(1)
-    chatbox.send_keys(u'\ue007')  # ENTER para enviar
-    print("✅ Mensaje enviado.")
-
-    # Espera extra para asegurar el envío
-    time.sleep(5)
-
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
+        smtp.login(EMAIL_USER, EMAIL_PASS)
+        smtp.send_message(email)
+    print("✅ Correo enviado con éxito.")
 except Exception as e:
-    print("❌ Error al enviar el mensaje:", e)
-
-# 9. Cierre automático del navegador
-print("🔒 Cerrando navegador...")
-driver.quit()
+    print(f"❌ Error al enviar el correo: {e}")
