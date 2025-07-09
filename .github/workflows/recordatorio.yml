@@ -1,0 +1,28 @@
+name: Enviar recordatorio diario
+
+on:
+  schedule:
+    - cron: '0 23 * * *'  # Todos los días a las 6:00pm Colombia (23:00 UTC)
+  workflow_dispatch:  # También se puede ejecutar manualmente
+
+jobs:
+  run-rembot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v3
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Establecer variables de entorno
+        run: |
+          echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> $GITHUB_ENV
+
+      - name: Ejecutar bot
+        run: python main.py
