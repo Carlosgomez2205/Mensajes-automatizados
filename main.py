@@ -19,20 +19,32 @@ if not all([GEMINI_API_KEY, EMAIL_USER, EMAIL_PASS, EMAIL_TO]):
 # 2. Configuración de grupos
 grupos = {
     "Análisis de datos G4": {
-        "horario": {"Mon": "18:00–22:00", "Wed": "18:00–22:00", "Fri": "18:00–22:00"},
-        "lugar": "CEIE calle 11A#32-40, PASTO"
+        "horario": {"Mon": "18:00–22:00", "Fri": "18:00–22:00"},
+        "lugar": "CEIE, PASTO - AULA: 302"
+    },
+    "Análisis de datos G4": {
+        "horario": {"Wed": "18:00–22:00"},
+        "lugar": "CEIE, PASTO - AULA: 203"
     },
     "Inteligencia Artificial G7": {
-        "horario": {"Tue": "08:00–12:00", "Thu": "08:00–12:00", "Sat": "08:00–12:00"},
-        "lugar": "CEIE calle 11A#32-40, PASTO"
+        "horario": {"Sat": "08:00–12:00"},
+        "lugar": "CEIE, PASTO - AULA: 203"
+    },
+    "Inteligencia Artificial G7": {
+        "horario": {"Tue": "08:00–12:00", "Thu": "08:00–12:00"},
+        "lugar": "CEIE, PASTO - AULA: 201"
     },
     "Inteligencia Artificial G4": {
         "horario": {"Mon": "08:00–12:00", "Wed": "08:00–12:00", "Fri": "08:00–12:00"},
-        "lugar": "CEIE calle 11A#32-40, PASTO"
+        "lugar": "CEIE, PASTO - AULA: 202"
     },
     "Inteligencia Artificial G6": {
-        "horario": {"Tue": "18:00–22:00", "Wed": "18:00–22:00", "Thu": "18:00–22:00"},
-        "lugar": "CEIE calle 11A#32-40, PASTO"
+        "horario": {"Wed": "18:00–22:00", "Thu": "18:00–22:00"},
+        "lugar": "CEIE, PASTO - AULA: 301"
+    }
+    "Inteligencia Artificial G6": {
+        "horario": {"Tue": "18:00–22:00"},
+        "lugar": "CEIE, PASTO - AULA: 203"
     }
 }
 
