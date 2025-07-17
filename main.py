@@ -1,4 +1,20 @@
-# ... (mismo encabezado y carga de variables) ...
+import os
+import requests
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from datetime import datetime, timedelta
+
+# 1. Cargar variables de entorno
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+EMAIL_USER     = os.environ.get("EMAIL_USER")
+EMAIL_PASS     = os.environ.get("EMAIL_PASS")
+EMAIL_TO       = os.environ.get("EMAIL_TO")
+
+# Validar claves
+if not all([GEMINI_API_KEY, EMAIL_USER, EMAIL_PASS, EMAIL_TO]):
+    print("❌ Error: Una o más variables de entorno no están definidas.")
+    exit(1)
 
 # 2. Configuración de grupos como lista (ya no como diccionario con claves duplicadas)
 grupos = [
