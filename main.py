@@ -20,11 +20,11 @@ if not all([GEMINI_API_KEY, EMAIL_USER, EMAIL_PASS, EMAIL_TO]):
 grupos = {
     "Análisis de datos G4": {
         "horario": {"Mon": "18:00–22:00", "Fri": "18:00–22:00"},
-        "lugar": "CEIE, PASTO - AULA: 302"
+        "lugar": "CEIE, PASTO - AULA: 202"
     },
     "Análisis de datos G4": {
         "horario": {"Wed": "18:00–22:00"},
-        "lugar": "CEIE, PASTO - AULA: 203"
+        "lugar": "CEIE, PASTO - AULA: 303"
     },
     "Inteligencia Artificial G7": {
         "horario": {"Sat": "08:00–12:00"},
@@ -40,8 +40,12 @@ grupos = {
     },
     "Inteligencia Artificial G6": {
         "horario": {"Wed": "18:00–22:00", "Thu": "18:00–22:00"},
-        "lugar": "CEIE, PASTO - AULA: 301"
-    }
+        "lugar": "CEIE, PASTO - AULA: 302"
+    },
+    "Inteligencia Artificial G6": {
+        "horario": {"Thu": "18:00–22:00"},
+        "lugar": "CINAR SISTEMAS, PASTO - AULA: 101"
+    },
     "Inteligencia Artificial G6": {
         "horario": {"Tue": "18:00–22:00"},
         "lugar": "CEIE, PASTO - AULA: 203"
