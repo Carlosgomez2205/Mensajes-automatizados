@@ -53,7 +53,7 @@ grupos = {
 }
 
 # 3. Calcular el día siguiente
-mañana = datetime.now() + timedelta(days=1)
+mañana = datetime.now() + timedelta(days=0)
 dia_abbr = mañana.strftime("%a")
 fecha_texto = mañana.strftime("%A, %d de %B").capitalize()
 
