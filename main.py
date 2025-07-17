@@ -45,7 +45,7 @@ grupos = [
     },
     {
         "nombre": "Inteligencia Artificial G6",
-        "horario": {"Wed": "18:00–22:00", "Thu": "18:00–22:00"},
+        "horario": {"Wed": "18:00–22:00"},
         "lugar": "CEIE, PASTO - AULA: 302"
     },
     {
