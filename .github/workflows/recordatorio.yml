@@ -2,7 +2,7 @@ name: Enviar recordatorio de clases
 
 on:
   schedule:
-    - cron: '0 21 * * *'  # Ejecuta todos los días a las 10:00 p.m. UTC
+    - cron: '0 22 * * *'  # Ejecuta todos los días a las 10:00 p.m. UTC
   workflow_dispatch:      # Permite ejecución manual
 
 jobs:
