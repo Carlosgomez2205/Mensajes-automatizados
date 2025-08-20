@@ -26,7 +26,7 @@ grupos = [
     {
         "nombre": "Análisis de datos G4",
         "horario": {"Wed": "18:00–22:00"},
-        "lugar": "CEIE, PASTO - AULA: 303"
+        "lugar": "CEIE, PASTO - AULA: 302"
     },
     {
         "nombre": "Inteligencia Artificial G7",
@@ -41,22 +41,22 @@ grupos = [
     {
         "nombre": "Inteligencia Artificial G4",
         "horario": {"Mon": "08:00–12:00", "Wed": "08:00–12:00", "Fri": "08:00–12:00"},
-        "lugar": "CEIE, PASTO - AULA: 202"
+        "lugar": "CEIE, PASTO - AULA: 201"
     },
     {
         "nombre": "Inteligencia Artificial G6",
         "horario": {"Wed": "18:00–22:00"},
-        "lugar": "CEIE, PASTO - AULA: 302"
+        "lugar": "CEIE, PASTO - AULA: 301"
     },
     {
         "nombre": "Inteligencia Artificial G6",
         "horario": {"Thu": "18:00–22:00"},
-        "lugar": "CINAR SISTEMAS, PASTO - AULA: 101"
+        "lugar": "CEIE, PASTO - AULA: 302"
     },
     {
         "nombre": "Inteligencia Artificial G6",
         "horario": {"Tue": "18:00–22:00"},
-        "lugar": "CEIE, PASTO - AULA: 203"
+        "lugar": "CEIE, PASTO - AULA: 206"
     }
 ]
 
@@ -117,4 +117,5 @@ try:
     print("✅ Correo enviado con éxito.")
 except Exception as e:
     print(f"❌ Error al enviar el correo: {e}")
+
 
