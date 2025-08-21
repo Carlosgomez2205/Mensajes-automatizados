@@ -21,12 +21,12 @@ grupos = [
     {
         "nombre": "Análisis de datos G4",
         "horario": {"Mon": "18:00–22:00", "Fri": "18:00–22:00"},
-        "lugar": "CEIE, PASTO - AULA: 202"
+        "lugar": "CEIE, PASTO - AULA: 302"
     },
     {
         "nombre": "Análisis de datos G4",
         "horario": {"Wed": "18:00–22:00"},
-        "lugar": "CEIE, PASTO - AULA: 302"
+        "lugar": "CEIE, PASTO - AULA: 206"
     },
     {
         "nombre": "Inteligencia Artificial G7",
@@ -117,5 +117,6 @@ try:
     print("✅ Correo enviado con éxito.")
 except Exception as e:
     print(f"❌ Error al enviar el correo: {e}")
+
 
 
